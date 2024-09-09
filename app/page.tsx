@@ -1,27 +1,17 @@
 "use client";
 import React from "react";
 import axios from "axios";
-import { cn } from "@/lib/utils";
-
-const options = [
-  {name: "Alice (F)",     voice_id: "Xb7hH8MSUJpSbSDYk0k2"},
-  {name: "Bill (M)",      voice_id: "pqHfZKP75CvOlQylNhV4"},
-  {name: "Brian (M)",     voice_id: "nPczCjzI2devNBz1zQrb"},
-  {name: "Callum (M)",    voice_id: "N2lVS1w4EtoT3dr4eOWO"},
-  {name: "Charlie (M)",   voice_id: "IKne3meq5aSn9XLyUdCD"},
-  {name: "Charlotte (F)", voice_id: "XB0fDUnXU5powFXDhCwa"},
-  {name: "Chris (M)",     voice_id: "iP95p4xoKVk53GoZ742B"},
-  {name: "Daniel (M)",    voice_id: "onwK4e9ZLuTAKqWW03F9"},
-  {name: "Eric (M)",      voice_id: "cjVigY5qzO86Huf0OWal"},
-  {name: "George (M)",    voice_id: "JBFqnCBsd6RMkjVDRZzb"},
-  {name: "Jessica (F)",   voice_id: "cgSgspJ2msm6clMCkdW9"},
-  {name: "Laura (F)",     voice_id: "FGY2WhTYpPnrIDTdsKH5"},
-  {name: "Liam (M)",      voice_id: "TX3LPaxmHKxFdv7VOQHJ"},
-  {name: "Lily (F)",      voice_id: "pFZP5JQG7iQjIQuC4Bku"},
-  {name: "Matilda (F)",   voice_id: "XrExE9yKIg1WjnnlVkGX"},
-  {name: "Sarah (F)",     voice_id: "EXAVITQu4vr4xnSDxMaL"},
-  {name: "Will (M)",      voice_id: "bIHbv24MWmeRgasZH58o"},
-];
+import { Loader2 } from "lucide-react"
+import { voice_options } from "@/constants/voice";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function Home() {
   const [text, setText] = React.useState("");
@@ -64,43 +54,41 @@ export default function Home() {
           setLoading(false);
         }
       } else {
-        setError("Error: Unable to stream audio.");
+        throw new Error("Error: Unable to stream audio.");
       }
     } catch (error) {
       setError("Error: Unable to stream audio.");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container max-w-2xl mx-auto p-4">
-      <h1 className="py-6 text-center font-bold text-2xl">
+    <div className="container max-w-2xl mx-auto py-3 px-2">
+      <h1 className="mb-6 mt-3 text-center font-bold text-2xl">
         AI voice Elevenlabs
       </h1>
 
       <div className="w-full flex gap-3 items-center flex-col">
-        <textarea
-          className="flex-grow border p-2 rounded-lg h-[250px] w-full"
-          name="prompt"
-          placeholder="Enter a prompt text to speech"
-          onChange={(e) => setText(e.target.value)}
-          value={text}
-          disabled={loading}
-        />
-        
-        <div className="flex gap-3">
-          <select className="border p-2 rounded" onChange={(e) => setVoiceId(e.target.value)} value={voiceId}>
-            {options.map((option) => (
-                <option key={option.voice_id} value={option.voice_id}>
-                  {option.name}
-                </option>
+      <div className="flex gap-3">
+          <Select onValueChange={(val) => setVoiceId(val)} defaultValue={voiceId}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Theme" />
+            </SelectTrigger>
+            <SelectContent>
+            {voice_options.map((option) => (
+                <SelectItem key={option.voice_id} value={option.voice_id}>{option.name}</SelectItem>
               )
             )}
-          </select>
+            </SelectContent>
+          </Select>
 
-          <button className={cn("border px-3 rounded-md text-white bg-black", loading?"bg-slate-500 text-slate-200 cursor-not-allowed":"")} disabled={loading} onClick={handlePlay}>
+          <Button onClick={handlePlay} disabled={loading}>
+          {loading && <Loader2 className="md:mr-1 h-4 w-4 animate-spin" />}
             Play
-          </button>
+          </Button>
         </div>
+
+        <Textarea placeholder="Enter a prompt text to speech" onChange={(e) => setText(e.target.value)} value={text} className="h-[200px] text-base" />
       </div>
       {error && <div className="text-red-500">{error}</div>}
     </div>
