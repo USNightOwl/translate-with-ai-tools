@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Translate text with AI tools",
+  title: "Translate with AI tools",
   description: "This app translates languages ​​and supports voice",
   icons: "/logo.svg"
 };
