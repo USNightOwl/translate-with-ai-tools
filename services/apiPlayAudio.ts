@@ -2,7 +2,7 @@ import AxiosClient from "@/config/elevenlabs";
 
 export const getTextToSpeech = async(voiceId: string, text: string) => {
   const voiceSettings = {
-    stability: 0,
+    stability: 0.8,
     similarity_boost: 0,
   };
 

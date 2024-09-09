@@ -47,7 +47,7 @@ const PlayAudio = ({ text, voiceId }: Props) => {
     }
   }
 
-  if (text.trim().length <= 0) return<span></span>;
+  if (text.trim().length <= 0 && !playing && !disabled) return<span></span>;
 
   return (
     <Button onClick={handleClick} disabled={disabled}>
